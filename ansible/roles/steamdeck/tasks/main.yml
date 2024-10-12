@@ -119,3 +119,11 @@
 - name: Install konsave
   ansible.builtin.pip:
     name: konsave
+
+- name: Disable kwallet
+  community.general.ini_file:
+    path: /home/deck/.config/kwalletrc
+    section: Wallet
+    option: Enabled
+    value: false
+    mode: '0600'
