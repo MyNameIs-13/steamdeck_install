@@ -54,14 +54,14 @@ check_internet "${SSID}" "${ENCRYPTED_FILE}"  # early to have all user interacti
 if ! [ -d .venv ]; then
     python3 -m venv .venv
 fi
-source .venv/bin/activate
+source /home/deck/.venv/bin/activate
 
 python3 -m ensurepip --upgrade  # same command will update pip later on
-~/.venv/bin/pip3 install ansible
+pip3 install ansible
 
 inventory="${SCRIPT_HOME}/ansible/hosts.yml"
 # TODO: add error handling in case ansible-playbook stops
-~/.venv/bin/ansible-playbook "${SCRIPT_HOME}/ansible/main.yml" -i "${inventory}" -T 60 -e __dotfiles_dest="${GIT_PATH}/../dotfiles"
+/home/deck/.venv/bin/ansible-playbook "${SCRIPT_HOME}/ansible/main.yml" -i "${inventory}" -T 60 -e __dotfiles_dest="${GIT_PATH}/../dotfiles"
 
 /home/deck/.local/bin/chezmoi init --apply --source "${GIT_PATH}/../dotfiles"
 
