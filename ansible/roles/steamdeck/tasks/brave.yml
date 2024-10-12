@@ -1,0 +1,96 @@
+---
+# doesn't work due to:  https://github.com/brave/brave-browser/issues/34481
+- name: Brave
+  block:
+    - name: Generate a random password
+      ansible.builtin.debug:
+        var: lookup('community.general.random_string', min_lower=1, min_upper=1, min_special=1, min_numeric=1)
+      register: __password
+      no_log: true
+
+    - name: Set random password
+      ansible.builtin.shell: |
+        passwd deck << EOD
+        {{ __password }}
+        {{ __password }}
+        EOD
+      changed_when: true
+      no_log: true
+
+    - name: Set password fact
+      ansible.builtin.set_fact:
+        ansible_become_password: "{{ __password }}"
+      no_log: true
+
+    - name: Disable read-only filesystem
+      ansible.builtin.command: steamos-readonly disable
+      become: true
+      changed_when: true
+
+    - name: Prepare brave folder
+      ansible.builtin.file:
+        path: /app/brave
+        state: directory
+        mode: '0777'
+        owner: deck
+        group: deck
+      become: true
+
+    - name: Prepare brave/extensions folder
+      ansible.builtin.file:
+        path: /app/brave/extensions
+        state: directory
+        mode: '0777'
+        owner: deck
+        group: deck
+      become: true
+
+    - name: Add brave initial_preferences
+      ansible.builtin.template:
+        src: brave-settings.j2
+        dest: /app/brave/initial_preferences
+        mode: '0666'
+        owner: deck
+        group: deck
+      become: true
+
+    - name: Add brave bookmarks
+      ansible.builtin.template:
+        src: brave-bookmarks.html.j2
+        dest: /app/brave/bookmarks.html
+        mode: '0666'
+        owner: deck
+        group: deck
+      become: true
+
+    - name: Add brave extensions
+      ansible.builtin.copy:
+        dest: /app/brave/extensions/{{ item }}.json
+        content: |
+          {
+            "external_update_url": "https://clients2.google.com/service/update2/crx"
+          }
+        mode: '0666'
+        owner: deck
+        group: deck
+      with_items:
+        - "oboonakemofpalcgghocfoadofidjkkk" # keepassxc
+        - "danncghahncanipdoajmakdbeaophenb" # auto-group-tabs
+        - "fploionmjgeclbkemipmkogoaohcdbig" # page-load-time
+      become: true
+
+    - name: Allow access to /app/brave
+      ansible.builtin.command: flatpak override com.brave.Browser --filesystem="/app/brave"
+      become: true
+      changed_when: true
+
+  always:
+    - name: Enable read-only filesystem
+      ansible.builtin.command: steamos-readonly enable
+      become: true
+      changed_when: true
+
+    - name: Remove password
+      ansible.builtin.command: passwd -d deck
+      become: true
+      changed_when: true

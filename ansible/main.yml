@@ -1,0 +1,5 @@
+---
+- name: Install
+  hosts: steamdeck
+  roles:
+    - role: steamdeck

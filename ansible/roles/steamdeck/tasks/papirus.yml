@@ -1,0 +1,24 @@
+---
+- name: Get papirus install script
+  ansible.builtin.get_url:
+    url: https://git.io/papirus-icon-theme-install
+    dest: /tmp/papirus-install.sh
+    mode: '0755'
+
+- name: Install papirus icon theme
+  ansible.builtin.shell: env DESTDIR="$HOME/.local/share/icons" /bin/bash /tmp/papirus-install.sh
+  changed_when: true
+
+- name: Download the papirus-folders-install script
+  ansible.builtin.get_url:
+    url: https://git.io/papirus-folders-install
+    dest: /tmp/papirus-folders-install.sh
+    mode: '0755'
+
+- name: Execute the papirus-folders-install script with custom PREFIX
+  ansible.builtin.shell: env PREFIX=$HOME/.local /bin/bash /tmp/papirus-folders-install.sh
+  changed_when: true
+
+- name: Set papirus color
+  ansible.builtin.command: /home/deck/.local/bin/papirus-folders -C darkcyan --theme Papirus-Light
+  changed_when: true

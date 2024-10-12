@@ -1,0 +1,127 @@
+---
+- name: Handle user-dirs
+  block:
+    - name: Create new user-dirs
+      ansible.builtin.file:
+        path: /home/deck/{{ dir }}
+        state: directory
+        mode: '0755'
+      loop:
+        - documents
+        - downloads
+        - music
+        - multimedia
+        - games
+        - .templates
+        - .desktop
+        - .public
+      loop_control:
+        loop_var: dir
+    - name: Remove old user-dirs
+      ansible.builtin.file:
+        path: /home/deck/{{ dir }}
+        state: absent
+      loop:
+        - Documents
+        - Downloads
+        - Templates
+        - Music
+        - Pictures
+        - Videos
+        - Public
+        - Desktop
+      loop_control:
+        loop_var: dir
+
+- name: Create boot videos directory
+  ansible.builtin.file:
+    path: /home/deck/.steam/root/config/uioverrides/movies
+    state: directory
+    mode: '0755'
+
+- name: Get boot videos
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: /home/deck/.steam/root/config/uioverrides/movies/{{ item.name }}
+    mode: '0644'
+  loop:
+    - { name: 'theOffice.webm', url: 'https://steamdeckrepo.com/post/download/EXNrP' }
+    - { name: 'ctos_watchdogs.webm', url: 'https://steamdeckrepo.com/post/download/nOLQE' }
+    - { name: 'cyperpunk.webm', url: 'https://steamdeckrepo.com/post/download/PjmNY' }
+    - { name: 'implodedAnimation.webm', url: 'https://steamdeckrepo.com/post/download/n4QDE' }
+    - { name: 'ps1Themed.webm', url: 'https://steamdeckrepo.com/post/download/YgKRY' }
+    - { name: 'flowingArticles.webm', url: 'https://steamdeckrepo.com/post/download/PmlBY' }
+    - { name: 'futurama.webm', url: 'https://steamdeckrepo.com/post/download/Pm69n' }
+    - { name: 'loveDeathAndRobot.webm', url: 'https://steamdeckrepo.com/post/download/aEN2E' }
+
+- name: Set up flathub for the user (as opposed to the pre-added system)
+  ansible.builtin.shell: |
+    flatpak --user \
+            remote-add \
+            --if-not-exists \
+            flathub https://flathub.org/repo/flathub.flatpakrepo
+  changed_when: false
+
+- name: Installing flatpak list
+  community.general.flatpak:
+    name:
+      - com.brave.Browser
+      - org.mozilla.Thunderbird
+      - com.discordapp.Discord
+      - io.github.trigg.discover_overlay
+      - org.keepassxc.KeePassXC
+      - org.videolan.VLC
+      - io.freetubeapp.FreeTube  # FreeTube for music in game mode
+      - net.lutris.Lutris
+      # - net.davidotek.pupgui2             # ProtonUp-Qt - launcher & compat layer manager
+      # - com.steamgriddb.steam-rom-manager # EMU ROM Manager
+      # - com.steamgriddb.SGDBoop
+      - dev.zed.Zed
+      - me.kozec.syncthingtk
+    method: user
+    state: present
+    remote: flathub
+
+- name: Create ~/.local/bin
+  ansible.builtin.file:
+    path: /home/deck/.local/bin
+    state: directory
+    mode: '0755'
+
+- name: Add chezmoi  # TODO: convert script to individual tasks
+  ansible.builtin.shell: sh -c "$(curl -fsLS get.chezmoi.io/lb)"
+  args:
+    chdir: /home/deck
+  changed_when: true
+
+- name: Add papirus icon theme
+  ansible.builtin.include_tasks:
+    file: papirus.yml
+
+# - name: Prepare brave settings  # doesn't work due to:  https://github.com/brave/brave-browser/issues/34481
+#   ansible.builtin.include_tasks:
+#     file: brave.yml
+
+- name: Add rustdesk
+  ansible.builtin.include_tasks:
+    file: rustdesk.yml
+  vars:
+    user: rustdesk
+    repo: rustdesk
+
+- name: Add steamtinkerlaunch
+  ansible.builtin.include_tasks:
+    file: steamtinkerlaunch.yml
+  vars:
+    user: sonic2kk
+    repo: steamtinkerlaunch
+
+- name: Install konsave
+  ansible.builtin.pip:
+    name: konsave
+
+- name: Clone dotfiles
+  ansible.builtin.git:
+    repo: https://github.com/MyNameIs-13/dotfiles.git
+    dest: "__dotfiles_dest"
+    version: master

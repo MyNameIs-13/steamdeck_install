@@ -1,0 +1,26 @@
+---
+- name: Clone the steamtinkerlaunch repository  # noqa: latest[git] I want to have the latest
+  ansible.builtin.git:
+    repo: https://github.com/{{ user }}/{{ repo }}.git
+    dest: /home/deck/documents/scm/steamtinkerlaunch
+    version: master
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Make steamtinkerlaunch executable
+  ansible.builtin.file:
+    path: /home/deck/documents/scm/steamtinkerlaunch/steamtinkerlaunch
+    owner: deck
+    group: deck
+    mode: '0755'
+
+- name: Create a symbolic link for steamtinkerlaunch
+  ansible.builtin.file:
+    src: /home/deck/documents/scm/steamtinkerlaunch/steamtinkerlaunch
+    dest: /home/deck/.local/bin/steamtinkerlaunch
+    owner: deck
+    group: deck
+    state: link
+
+- name: Run steamtinkerlaunch to finish installation
+  ansible.builtin.command: /home/deck/documents/scm/steamtinkerlaunch/steamtinkerlaunch
+  changed_when: true
