@@ -51,8 +51,8 @@ fi
 check_internet "${SSID}" "${ENCRYPTED_FILE}"  # early to have all user interactions together early
 
 # Create and enter virtual environment
-if ! [ -d .venv ]; then
-    python3 -m venv .venv
+if ! [ -d /home/deck/.venv ]; then
+    python3 -m venv /home/deck/.venv
 fi
 source /home/deck/.venv/bin/activate
 
