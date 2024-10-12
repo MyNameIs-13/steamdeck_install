@@ -119,9 +119,3 @@
 - name: Install konsave
   ansible.builtin.pip:
     name: konsave
-
-- name: Clone dotfiles
-  ansible.builtin.git:
-    repo: https://github.com/MyNameIs-13/dotfiles.git
-    dest: "__dotfiles_dest"
-    version: master
