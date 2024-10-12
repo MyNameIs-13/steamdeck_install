@@ -50,12 +50,18 @@ fi
 
 check_internet "${SSID}" "${ENCRYPTED_FILE}"  # early to have all user interactions together early
 
+# Create and enter virtual environment
+if ! [ -d .venv ]; then
+    python3 -m venv .venv
+fi
+source .venv/bin/activate
+
 python3 -m ensurepip --upgrade  # same command will update pip later on
-~/.local/bin/pip3 install ansible  # we only need the basics
+~/.venv/bin/pip3 install ansible
 
 inventory="${SCRIPT_HOME}/ansible/hosts.yml"
 # TODO: add error handling in case ansible-playbook stops
-~/.local/bin/ansible-playbook "${SCRIPT_HOME}/ansible/main.yml" -i "${inventory}" -T 60 -e __dotfiles_dest="${GIT_PATH}/../dotfiles"
+~/.venv/bin/ansible-playbook "${SCRIPT_HOME}/ansible/main.yml" -i "${inventory}" -T 60 -e __dotfiles_dest="${GIT_PATH}/../dotfiles"
 
 /home/deck/.local/bin/chezmoi init --apply --source "${GIT_PATH}/../dotfiles"
 
