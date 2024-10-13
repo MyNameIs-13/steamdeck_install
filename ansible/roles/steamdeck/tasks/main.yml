@@ -50,9 +50,17 @@
     - { name: 'cyperpunk.webm', url: 'https://steamdeckrepo.com/post/download/PjmNY' }
     - { name: 'implodedAnimation.webm', url: 'https://steamdeckrepo.com/post/download/n4QDE' }
     - { name: 'ps1Themed.webm', url: 'https://steamdeckrepo.com/post/download/YgKRY' }
-    - { name: 'flowingArticles.webm', url: 'https://steamdeckrepo.com/post/download/PmlBY' }
     - { name: 'futurama.webm', url: 'https://steamdeckrepo.com/post/download/Pm69n' }
     - { name: 'loveDeathAndRobot.webm', url: 'https://steamdeckrepo.com/post/download/aEN2E' }
+    - { name: 'borderlands_poor.webm', url: 'https://steamdeckrepo.com/post/download/YMj2m' }
+    - { name: 'stranger_things.webm', url: 'https://steamdeckrepo.com/post/download/rPQpY' }
+    - { name: 'gameboy_intro_vintage_edition.webm', url: 'https://steamdeckrepo.com/post/download/jYoWY' }
+    - { name: 'star_wars_intro_disney.webm', url: 'https://steamdeckrepo.com/post/download/MnZgE' }
+    - { name: 'into_the_spiderverse.webm', url: 'https://steamdeckrepo.com/post/download/YqM1Y' }
+    - { name: 'steamdeck_schematics_portal_2.webm', url: 'https://steamdeckrepo.com/post/download/YxXBY' }
+    - { name: 'disney_classic_circa_1980s_steam_deck_intro.webm', url: 'https://steamdeckrepo.com/post/download/YG2WE' }
+    - { name: 'star_trek_lcars_boot_sequence.webm', url: 'https://steamdeckrepo.com/post/download/YJO1P' }
+    - { name: 'doctor_who_2023_24_short_version.webm', url: 'https://steamdeckrepo.com/post/download/PQm7A' }
 
 - name: Set up flathub for the user (as opposed to the pre-added system)
   ansible.builtin.shell: |
