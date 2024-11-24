@@ -61,7 +61,7 @@ pip3 install ansible
 
 inventory="${SCRIPT_HOME}/ansible/hosts.yml"
 # TODO: add error handling in case ansible-playbook stops
-/home/deck/.venv/bin/ansible-playbook "${SCRIPT_HOME}/ansible/main.yml" -i "${inventory}" -T 60 -e __dotfiles_dest="${GIT_PATH}/../dotfiles"
+LC_ALL=en_US.UTF-8 /home/deck/.venv/bin/ansible-playbook "${SCRIPT_HOME}/ansible/main.yml" -i "${inventory}" -T 60 -e __dotfiles_dest="${GIT_PATH}/../dotfiles"
 
 /home/deck/.local/bin/chezmoi init --apply --source "${GIT_PATH}/../dotfiles"
 
