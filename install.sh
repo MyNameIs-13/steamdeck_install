@@ -51,9 +51,10 @@ fi
 check_internet "${SSID}" "${ENCRYPTED_FILE}"  # early to have all user interactions together early
 
 # Create and enter virtual environment
-if ! [ -d /home/deck/.venv ]; then
-    python3 -m venv /home/deck/.venv
+if -d /home/deck/.venv; then
+    mkdir -p /home/deck/.venv
 fi
+python3 -m venv /home/deck/.venv
 source /home/deck/.venv/bin/activate
 
 python3 -m ensurepip --upgrade  # same command will update pip later on
