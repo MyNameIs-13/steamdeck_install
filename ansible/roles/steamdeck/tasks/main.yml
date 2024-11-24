@@ -86,6 +86,7 @@
       # - com.steamgriddb.SGDBoop
       - dev.zed.Zed
       - me.kozec.syncthingtk
+      - com.heroicgameslauncher.hgl
     method: user
     state: present
     remote: flathub
