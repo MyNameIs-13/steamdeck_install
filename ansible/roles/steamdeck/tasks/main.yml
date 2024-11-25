@@ -83,7 +83,7 @@
       - net.lutris.Lutris
       # - net.davidotek.pupgui2             # ProtonUp-Qt - launcher & compat layer manager
       # - com.steamgriddb.steam-rom-manager # EMU ROM Manager
-      # - com.steamgriddb.SGDBoop
+      - com.steamgriddb.SGDBoop
       - dev.zed.Zed
       - me.kozec.syncthingtk
       - com.heroicgameslauncher.hgl
